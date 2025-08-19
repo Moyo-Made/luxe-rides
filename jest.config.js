@@ -1,39 +1,49 @@
-module.exports = {
-	// Test environment
-	testEnvironment: "node", // Use 'jsdom' for browser-like environment
+const nextJest = require("next/jest");
 
-	// File patterns for tests
+const createJestConfig = nextJest({
+	// Provide the path to your Next.js app to load next.config.js and .env files
+	dir: "./",
+});
+
+// Add any custom config to be passed to Jest
+const customJestConfig = {
+	// Add more setup options before each test is run
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+
+	// Test environment
+	testEnvironment: "jest-environment-jsdom",
+
+	// Test patterns
 	testMatch: [
 		"**/__tests__/**/*.(js|jsx|ts|tsx)",
 		"**/*.(test|spec).(js|jsx|ts|tsx)",
 	],
 
 	// Coverage configuration
-	collectCoverage: true,
 	collectCoverageFrom: [
 		"src/**/*.(js|jsx|ts|tsx)",
-		"!src/**/*.d.ts",
-		"!src/index.js",
+		"pages/**/*.(js|jsx|ts|tsx)",
+		"components/**/*.(js|jsx|ts|tsx)",
+		"lib/**/*.(js|jsx|ts|tsx)",
+		"!**/*.d.ts",
+		"!**/node_modules/**",
+		"!**/.next/**",
 	],
+
+	// Module name mapping for absolute imports
+	moduleNameMapping: {
+		"^@/components/(.*)$": "<rootDir>/components/$1",
+		"^@/pages/(.*)$": "<rootDir>/pages/$1",
+		"^@/lib/(.*)$": "<rootDir>/lib/$1",
+	},
+
+	// Coverage settings
 	coverageDirectory: "coverage",
 	coverageReporters: ["text", "lcov", "html"],
 
-	// Setup files
-	setupFilesAfterEnv: ["<rootDir>/src/setupTests.js"],
-
-	// Module paths (if using absolute imports)
-	moduleNameMapping: {
-		"^@/(.*)$": "<rootDir>/src/$1",
-	},
-
-	// Transform files with Babel
-	transform: {
-		"^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
-	},
-
 	// Ignore patterns
-	testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/build/"],
-
-	// Verbose output
-	verbose: true,
+	testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
 };
+
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+module.exports = createJestConfig(customJestConfig);
