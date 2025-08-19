@@ -13,6 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/eslint-plugin-next": "^15.4.7",
     "next": "15.4.7",
     "react": "19.1.0",
     "react-dom": "19.1.0"
@@ -27,6 +28,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-jest": "^30.0.5",
+    "eslint": "9.33.0",
+    "eslint-config-next": "15.4.7",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "tailwindcss": "^4",
